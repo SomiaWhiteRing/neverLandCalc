@@ -1,178 +1,44 @@
 <template>
   <div>
     <b-form>
-      <h5 class="section">抽取目标</h5>
+      <h5 class="section">各项加成</h5>
 
-      <b-form-group id="star-group" label="卡池类型" label-for="pool-type" label-cols="4">
-        <b-form-radio-group
-          id="pool-type"
-          v-model="poolType"
-          :options="poolTypeOptions"
-          required
-          buttons
-          button-variant="outline-secondary"
-          @input="onInput()"
-        ></b-form-radio-group>
+      <b-form-group id="mushroom-group" label="蘑菇加成（%）" label-for="mushroom" label-cols="4" :state="mushroom >= 0"
+        invalid-feedback="蘑菇加成数值必须 >= 0">
+        <b-form-input type="number" number id="mushroom" v-model="mushroom" required :state="mushroom >= 0" :step="100"
+          @change="onInput()"></b-form-input>
       </b-form-group>
 
-      <b-alert show dismissible>
-        卡池类型说明： <br/>
-        限定卡池 up 6 星占全部 6 星的 70%, 标准池为 50% <br/>
-        定向寻访（联合行动）中只会出现 up 干员
-      </b-alert>
-
-      <b-form-group id="star-group" label="目标干员" label-for="star" label-cols="4">
-        <b-form-radio-group
-          id="star"
-          v-model="star"
-          :options="starOptions"
-          required
-          buttons
-          button-variant="outline-secondary"
-          @input="onInput()"
-        ></b-form-radio-group>
+      <b-form-group id="bamboos-group" label="竹笋加成（%）" label-for="bamboos" label-cols="4" :state="bamboos >= 0"
+        invalid-feedback="竹笋加成数值必须 >= 0">
+        <b-form-input type="number" number id="bamboos" v-model="bamboos" required :state="bamboos >= 0"
+          @change="onInput()"></b-form-input>
       </b-form-group>
 
-      <b-form-group
-        id="opertor-num-group"
-        label="同星 up 干员数"
-        label-for="operator-num"
-        label-cols="4"
-      >
-        <b-form-radio-group
-          id="operator-num"
-          v-model="operatorNum"
-          :options="operatorNumOptions"
-          required
-          buttons
-          button-variant="outline-secondary"
-          @input="onInput()"
-        ></b-form-radio-group>
+      <b-form-group id="ginseng-group" label="人参加成（%）" label-for="ginseng" label-cols="4" :state="ginseng >= 0"
+        invalid-feedback="人参加成数值必须 >= 0">
+        <b-form-input type="number" number id="ginseng" v-model="ginseng" required :state="ginseng >= 0"
+          @change="onInput()"></b-form-input>
       </b-form-group>
 
-      <h5 class="section">投入资源</h5>
-      <b-form-group
-        id="gem-group"
-        label="合成玉"
-        label-for="gem"
-        label-cols="4"
-        :state="gem>=0"
-        invalid-feedback="合成玉投入量必须 >= 0"
-      >
-        <b-form-input
-          type="number"
-          number
-          id="gem"
-          v-model="gem"
-          required
-          :state="gem>=0"
-          :step="100"
-          @input="onInput()"
-        ></b-form-input>
+      <b-form-group id="pt-group" label="活动点数加成（%）" label-for="pt" label-cols="4" :state="pt >= 0"
+        invalid-feedback="活动点数加成数值必须 >= 0">
+        <b-form-input type="number" number id="pt" v-model="pt" required :state="pt >= 0"
+          @change="onInput()"></b-form-input>
       </b-form-group>
 
-      <b-form-group
-        id="originium-group"
-        label="至纯源石"
-        label-for="originium"
-        label-cols="4"
-        :state="originium>=0"
-        invalid-feedback="源石投入量必须 >= 0"
-      >
-        <b-form-input
-          type="number"
-          number
-          id="originium"
-          v-model="originium"
-          required
-          :state="originium>=0"
-          @input="onInput()"
-        ></b-form-input>
-      </b-form-group>
-
-      <b-form-group
-        id="draw-coupon-group"
-        label="单抽券"
-        label-for="draw-coupon"
-        label-cols="4"
-        :state="drawCoupon>=0"
-        invalid-feedback="单抽券投入量必须 >= 0"
-      >
-        <b-form-input
-          type="number"
-          number
-          id="draw-coupon"
-          v-model="drawCoupon"
-          required
-          :state="drawCoupon>=0"
-          @input="onInput()"
-        ></b-form-input>
-      </b-form-group>
-
-      <b-form-group
-        id="draw-ten-coupon-group"
-        label="十连券"
-        label-for="draw-ten-coupon"
-        label-cols="4"
-        :state="drawTenCoupon>=0"
-        invalid-feedback="十连券投入量必须 >= 0"
-      >
-        <b-form-input
-          type="number"
-          number
-          id="draw-ten-coupon"
-          v-model="drawTenCoupon"
-          required
-          :state="drawTenCoupon>=0"
-          @input="onInput()"
-        ></b-form-input>
-      </b-form-group>
-
-      <h5 class="section">垫刀情况</h5>
-
-      <b-form-group
-        id="six-prev-draw-group"
-        label="六星寻访水位"
-        label-for="six-prev-draw"
-        label-cols="4"
-        description="已经连续没有获得 6 星干员的次数，注意区分标准和限定寻访"
-        :state="sixPrevDraw>=0 && sixPrevDraw<=98"
-        invalid-feedback="水位必须 >= 0, 另外理论上连续无六星时第 99 抽出 6 星的概率是 100%, 所以水位也不可能 > 98."
-      >
-        <b-form-input
-          type="number"
-          number
-          id="six-prev-draw"
-          v-model="sixPrevDraw"
-          required
-          :state="sixPrevDraw>=0 && sixPrevDraw<=98"
-          @input="onInput()"
-          :disabled="star === 5"
-        ></b-form-input>
-      </b-form-group>
-
-      <b-form-group
-        id="this-prev-draw-group"
-        label="本池已抽次数"
-        label-for="this-prev-draw"
-        label-cols="4"
-        description="本次寻访已经抽取次数，仅用于计算五星保底"
-        :state="thisPrevDraw>=0"
-        invalid-feedback="已抽次数必须 >= 0"
-      >
-        <b-form-input
-          type="number"
-          number
-          id="this-prev-draw"
-          v-model="thisPrevDraw"
-          required
-          :state="thisPrevDraw>=0"
-          @input="onInput()"
-          :disabled="star === 6"
-        ></b-form-input>
-      </b-form-group>
-
-      <b-alert show dismissible>如果输入框变灰则说明该项对寻访目标无影响</b-alert>
+      <h5 class="section" @click="isCollapsed = !isCollapsed">加成详情
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          style="transition: all 0.5s ease-in-out;" class="bi bi-chevron-down" viewBox="0 0 16 16"
+          :style="isCollapsed ? 'transform: rotate(180deg)' : ''">
+          <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 1 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5
+            0 0 1 0-.708z" />
+        </svg>
+      </h5>
+      <div style="overflow: hidden;transition: max-height 0.5s ease-in-out;"
+        :style="isCollapsed ? 'max-height: 0px' : 'max-height: 1000px'">
+        <img :src="require('../assets/neverland.png')" alt="neverland" style="width: 100%; height: auto;">
+      </div>
     </b-form>
   </div>
 </template>
@@ -181,36 +47,15 @@
 export default {
   data() {
     return {
-      poolType: "standard",
-      poolTypeOptions: [
-        { text: "常驻", value: "standard" },
-        { text: "限定", value: "limited" },
-        { text: "定向", value: "joint" }
-      ],
-      star: 6,
-      starOptions: [
-        { text: "5 ⭐", value: 5 },
-        { text: "6 ⭐", value: 6 }
-      ],
-      operatorNum: 2,
-      operatorNumOptions: [
-        { text: "1", value: 1 },
-        { text: "2", value: 2 },
-        { text: "3", value: 3 },
-        { text: "4", value: 4 },
-        { text: "5", value: 5 },
-        { text: "6", value: 6 }
-      ],
-      gem: 0,
-      originium: 0,
-      drawCoupon: 0,
-      drawTenCoupon: 0,
-      sixPrevDraw: 0,
-      thisPrevDraw: 0
+      mushroom: 0,
+      bamboos: 0,
+      ginseng: 0,
+      pt: 0,
+      isCollapsed: true
     };
   },
   methods: {
-    onInput: function() {
+    onInput: function () {
       this.$emit("change");
     }
   }
@@ -221,5 +66,6 @@ export default {
 .section {
   margin-top: 15px;
   margin-bottom: 15px;
+  cursor: pointer;
 }
 </style>

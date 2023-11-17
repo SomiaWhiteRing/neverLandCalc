@@ -1,10 +1,3 @@
-# Arknights-Headhunt-Calculator
+# neverLandCalc
 
-明日方舟干员寻访出货概率计算器。
-
-## Demo
-
-Visit https://vopaaz.github.io/Arknights-Headhunt-Calculator/
-
-![](img/demo.png)
-
+梦幻岛活动体力计算器。

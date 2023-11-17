@@ -1,114 +1,81 @@
-// import * as _ from "lodash"
+const solver = require('javascript-lp-solver');
 
-function probabilityTargetStar(star, prevDraw) {
-  if (star === 5) {
-    if (prevDraw === 9) {
-      return 1
-    } else {
-      return 0.08
+/** 原代码
+function [Q9, Q10, Q11, Q12, totalAP] = baneverland(pt, mushroom, bamboos, ginseng)
+% 将输入变量加1并覆盖保存
+pt = pt + 1;
+mushroom = mushroom + 1;
+bamboos = bamboos + 1;
+ginseng = ginseng + 1;
+
+% 修改系数矩阵 A
+A = [-5pt, -5pt, -5pt, -20pt;
+-30mushroom, 0, 0, -4mushroom;
+0, -24bamboos, 0, -4bamboos;
+0, 0, -20ginseng, -4ginseng];
+
+% 右侧约束矢量 b
+b = [-10000; -7609; -6561; -4955];
+
+% 目标函数系数矢量
+f = [1; 1; 1; 1];
+
+% 变量下界
+lb = zeros(4, 1);
+
+% 整数规划条件
+intcon = 1:4;
+
+% 求解整数线性规划问题
+[x, fval, exitflag, output] = intlinprog(f, intcon, A, b, [], [], lb);
+
+% 输出结果
+Q9 = x(1);
+Q10 = x(2);
+Q11 = x(3);
+Q12 = x(4);
+
+% 输出解矢量和目标函数值(乘以15)
+disp(['解矢量，您要刷取的值是：Q9=', num2str(Q9), ', Q10=', num2str(Q10), ', Q11=', num2str(Q11), ', Q12=', num2str(Q12)]);
+disp(['目标函数：您总共需要花费', num2str(fval * 15), '点AP']);
+end
+
+ */
+export async function baneverland(mushroom, bamboos, ginseng, pt ) {
+  // 将输入变量加1并覆盖保存
+  pt += 1;
+  mushroom += 1;
+  bamboos += 1;
+  ginseng += 1;
+
+  var model = {
+    "optimize": "cost",
+    "opType": "min",
+    "constraints": {
+        "constraint1": { "max": -10000 },
+        "constraint2": { "max": -7609 },
+        "constraint3": { "max": -6561 },
+        "constraint4": { "max": -4955 }
+    },
+    "variables": {
+        "Q9": { "cost": 1, "constraint1": -5*pt, "constraint2": -30*mushroom },
+        "Q10": { "cost": 1, "constraint1": -5*pt, "constraint3": -24*bamboos },
+        "Q11": { "cost": 1, "constraint1": -5*pt, "constraint4": -20*ginseng },
+        "Q12": { "cost": 1, "constraint1": -20*pt, "constraint2": -4*mushroom, "constraint3": -4*bamboos, "constraint4": -4*ginseng }
+    },
+    "ints": {
+        "Q9": 1,
+        "Q10": 1,
+        "Q11": 1,
+        "Q12": 1
     }
-  } else if (star === 6) {
-    if (prevDraw <= 49) {
-      return 0.02
-    } else if (prevDraw < 99) {
-      return ((prevDraw - 48) * 2 / 100)
-    } else {
-      return undefined
-    }
-  } else {
-    return undefined
-  }
+};
+
+
+  var result = solver.Solve(model);
+
+  console.log("解矢量，您要刷取的值是：Q9=" + result.Q9 + ", Q10=" + result.Q10 + ", Q11=" + result.Q11 + ", Q12=" + result.Q12);
+  console.log("目标函数：您总共需要花费" + result.result * 15 + "点AP");
+
+  return result;
 }
-
-function totalDraw(gem, originium, drawCoupon, drawTenCoupon) {
-  return Math.floor((gem + 180 * originium) / 600 + drawCoupon + 10 * drawTenCoupon)
-}
-
-
-const m = new Map()
-
-function subArgs2Str(star, operatorNum, prevDraw, toDraw, poolType) {
-  return `${star.toFixed(0)}-${operatorNum.toFixed(0)}-${prevDraw.toFixed(0)}-${toDraw.toFixed(0)}-${poolType.toString()}`
-}
-
-function emptyRes() {
-  return {
-    target: Array(7).fill(0),
-    targetStar: Array(7).fill(0)
-  }
-}
-
-function calcSub(star, operatorNum, prevDraw, toDraw, poolType) {
-  const id = subArgs2Str(star, operatorNum, prevDraw, toDraw, poolType)
-
-  let res = emptyRes()
-  if (toDraw === 0) {
-    res.target[0] = 1
-    res.targetStar[0] = 1
-  } else if (m.has(id)) {
-    res = m.get(id)
-  } else {
-    const probStar = probabilityTargetStar(star, prevDraw)
-
-    let givenStarProbTarget;
-    if (poolType === "standard") {
-      givenStarProbTarget = 0.5 / operatorNum
-    } else if (poolType === "limited") {
-      givenStarProbTarget = star === 6 ? 0.7 / operatorNum : 0.5 / operatorNum
-    } else { // poolType === "joint"
-      givenStarProbTarget = 1 / operatorNum
-    }
-
-    // If is 6, clear prev. If is 5, set prev=100 so that guarantee won't work
-    const givenStarNextPrevDraw = star === 6 ? 0 : 100
-
-    // Following probability given this draw is NOT target star
-    const pNotS = probStar === 1 ? emptyRes() : calcSub(star, operatorNum, prevDraw + 1, toDraw - 1, poolType)
-
-    // Following probability given this draw is target star
-    const pIsS = calcSub(star, operatorNum, givenStarNextPrevDraw, toDraw - 1, poolType)
-
-    for (let index = 0; index < res.target.length; index++) {
-      if (index === 0) {
-        res.targetStar[index] = (1 - probStar) * pNotS.targetStar[index]
-        res.target[index] = (1 - probStar) * pNotS.target[index] + (probStar * (1 - givenStarProbTarget)) * pIsS.target[index]
-      } else if (index < res.target.length - 1) {
-        res.targetStar[index] = (1 - probStar) * pNotS.targetStar[index] + probStar * pIsS.targetStar[index - 1]
-        res.target[index] = (1 - probStar) * pNotS.target[index] + (probStar * (1 - givenStarProbTarget)) * pIsS.target[index]
-          + probStar * givenStarProbTarget * pIsS.target[index - 1]
-      } else {
-        res.targetStar[index] = (1 - probStar) * pNotS.targetStar[index] + probStar * (pIsS.targetStar[index - 1] + pIsS.targetStar[index])
-        res.target[index] = (1 - probStar) * pNotS.target[index] + (probStar * (1 - givenStarProbTarget)) * pIsS.target[index]
-          + probStar * givenStarProbTarget * (pIsS.target[index - 1] + pIsS.target[index])
-      }
-    }
-  }
-  m.set(id, res)
-  return res
-}
-
-export function calculateProbability(
-  star,
-  operatorNum,
-  gem,
-  originium,
-  drawCoupon,
-  drawTenCoupon,
-  sixPrevDraw,
-  thisPrevDraw,
-  limited
-) {
-
-  const toDraw = totalDraw(gem, originium, drawCoupon, drawTenCoupon)
-  let prevDraw
-  if (star === 6) {
-    prevDraw = sixPrevDraw
-  } else if (star === 5) {
-    prevDraw = thisPrevDraw
-  } else {
-    return undefined
-  }
-  return calcSub(star, operatorNum, prevDraw, toDraw, limited)
-}
-
-
