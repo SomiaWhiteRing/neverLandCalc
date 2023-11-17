@@ -10,6 +10,7 @@
         </b-col>
         <b-col lg="4" offset-lg="0" md="8" offset-md="2">
           <result-card message="计算结果" :result="result" />
+          <setting ref="setting" @change="onChange()" />
         </b-col>
       </b-row>
     </b-container>
@@ -19,6 +20,7 @@
 <script>
 import BaseInput from "../components/BaseInput.vue";
 import ResultCard from "../components/ResultCard.vue";
+import Setting from "../components/Setting.vue";
 import { baneverland } from "../js/calc";
 
 export default {
@@ -30,21 +32,24 @@ export default {
   components: {
     BaseInput,
     ResultCard,
+    Setting,
   },
   methods: {
     onChange: async function () {
       const d = this.$refs.baseInput;
+      const setting = this.$refs.setting;
       const result = await baneverland(
         d.mushroom / 100,
         d.bamboos / 100,
         d.ginseng / 100,
-        d.pt / 100
+        d.pt / 100,
+        setting
       );
       this.result = result;
     }
   },
   async mounted() {
-    this.result = await baneverland(0, 0, 0, 0);
+    this.result = await baneverland(0, 0, 0, 0, this.$refs.setting);
   }
 };
 </script>

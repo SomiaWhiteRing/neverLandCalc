@@ -41,7 +41,7 @@ disp(['目标函数：您总共需要花费', num2str(fval * 15), '点AP']);
 end
 
  */
-export async function baneverland(mushroom, bamboos, ginseng, pt ) {
+export async function baneverland(mushroom, bamboos, ginseng, pt, setting) {
   // 将输入变量加1并覆盖保存
   pt += 1;
   mushroom += 1;
@@ -52,10 +52,10 @@ export async function baneverland(mushroom, bamboos, ginseng, pt ) {
     "optimize": "cost",
     "opType": "min",
     "constraints": {
-        "constraint1": { "max": -10000 },
-        "constraint2": { "max": -7609 },
-        "constraint3": { "max": -6561 },
-        "constraint4": { "max": -4955 }
+        "constraint1": { "max": - setting.pt },
+        "constraint2": { "max": - setting.mushroom },
+        "constraint3": { "max": - setting.bamboos },
+        "constraint4": { "max": - setting.ginseng }
     },
     "variables": {
         "Q9": { "cost": 1, "constraint1": -5*pt, "constraint2": -30*mushroom },
