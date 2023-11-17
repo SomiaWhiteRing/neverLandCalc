@@ -36,6 +36,8 @@
             @input="onInput()"></b-form-input>
         </b-form-group>
 
+        <b-button variant="primary" @click="reset()">重置</b-button>
+
       </b-form>
     </div>
   </div>
@@ -55,7 +57,34 @@ export default {
   methods: {
     onInput: function () {
       this.$emit("change");
+    },
+    reset: function () {
+      this.mushroom = 7609;
+      this.bamboos = 6561;
+      this.ginseng = 4955;
+      this.pt = 10000;
+      this.$emit("change");
     }
+  },
+  watch: {
+    mushroom: function (newValue) {
+      localStorage.setItem("setting_mushroom", newValue);
+    },
+    bamboos: function (newValue) {
+      localStorage.setItem("setting_bamboos", newValue);
+    },
+    ginseng: function (newValue) {
+      localStorage.setItem("setting_ginseng", newValue);
+    },
+    pt: function (newValue) {
+      localStorage.setItem("setting_pt", newValue);
+    }
+  },
+  mounted() {
+    this.mushroom = Number(localStorage.getItem("setting_mushroom")) || 7609;
+    this.bamboos = Number(localStorage.getItem("setting_bamboos")) || 6561;
+    this.ginseng = Number(localStorage.getItem("setting_ginseng")) || 4955;
+    this.pt = Number(localStorage.getItem("setting_pt")) || 10000;
   }
 };
 </script>

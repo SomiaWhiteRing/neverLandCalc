@@ -58,10 +58,29 @@ export default {
     onInput: function () {
       this.$emit("change");
     }
+  },
+  watch: {
+    mushroom: function (newValue) {
+      localStorage.setItem("base_input_mushroom", newValue);
+    },
+    bamboos: function (newValue) {
+      localStorage.setItem("base_input_bamboos", newValue);
+    },
+    ginseng: function (newValue) {
+      localStorage.setItem("base_input_ginseng", newValue);
+    },
+    pt: function (newValue) {
+      localStorage.setItem("base_input_pt", newValue);
+    }
+  },
+  mounted() {
+    this.mushroom = Number(localStorage.getItem("base_input_mushroom")) || 0;
+    this.bamboos = Number(localStorage.getItem("base_input_bamboos")) || 0;
+    this.ginseng = Number(localStorage.getItem("base_input_ginseng")) || 0;
+    this.pt = Number(localStorage.getItem("base_input_pt")) || 0;
   }
 };
 </script>
-
 <style scoped>
 .section {
   margin-top: 15px;
