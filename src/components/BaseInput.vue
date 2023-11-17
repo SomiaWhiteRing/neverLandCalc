@@ -3,28 +3,28 @@
     <b-form>
       <h5 class="section">各项加成</h5>
 
-      <b-form-group id="mushroom-group" label="蘑菇加成（%）" label-for="mushroom" label-cols="4" :state="mushroom >= 0"
-        invalid-feedback="蘑菇加成数值必须 >= 0">
-        <b-form-input type="number" number id="mushroom" v-model="mushroom" required :state="mushroom >= 0" :step="100"
-          @change="onInput()"></b-form-input>
+      <b-form-group id="mushroom-group" label="蘑菇加成（%）" label-for="mushroom" label-cols="4"
+        :state="mushroom >= 0 && mushroom <= 100" invalid-feedback="蘑菇加成数值必须 >= 0 且 <= 100">
+        <b-form-input type="number" number id="mushroom" v-model="mushroom" required
+          :state="mushroom >= 0 && mushroom <= 100" :step="100" @input="onInput()"></b-form-input>
       </b-form-group>
 
-      <b-form-group id="bamboos-group" label="竹笋加成（%）" label-for="bamboos" label-cols="4" :state="bamboos >= 0"
-        invalid-feedback="竹笋加成数值必须 >= 0">
-        <b-form-input type="number" number id="bamboos" v-model="bamboos" required :state="bamboos >= 0"
-          @change="onInput()"></b-form-input>
+      <b-form-group id="bamboos-group" label="竹笋加成（%）" label-for="bamboos" label-cols="4"
+        :state="bamboos >= 0 && bamboos <= 100" invalid-feedback="竹笋加成数值必须 >= 0 且 <= 100">
+        <b-form-input type="number" number id="bamboos" v-model="bamboos" required :state="bamboos >= 0 && bamboos <= 100"
+          @input="onInput()"></b-form-input>
       </b-form-group>
 
-      <b-form-group id="ginseng-group" label="人参加成（%）" label-for="ginseng" label-cols="4" :state="ginseng >= 0"
-        invalid-feedback="人参加成数值必须 >= 0">
-        <b-form-input type="number" number id="ginseng" v-model="ginseng" required :state="ginseng >= 0"
-          @change="onInput()"></b-form-input>
+      <b-form-group id="ginseng-group" label="人参加成（%）" label-for="ginseng" label-cols="4"
+        :state="ginseng >= 0 && ginseng <= 100" invalid-feedback="人参加成数值必须 >= 0 且 <= 100">
+        <b-form-input type="number" number id="ginseng" v-model="ginseng" required :state="ginseng >= 0 && ginseng <= 100"
+          @input="onInput()"></b-form-input>
       </b-form-group>
 
-      <b-form-group id="pt-group" label="活动点数加成（%）" label-for="pt" label-cols="4" :state="pt >= 0"
-        invalid-feedback="活动点数加成数值必须 >= 0">
-        <b-form-input type="number" number id="pt" v-model="pt" required :state="pt >= 0"
-          @change="onInput()"></b-form-input>
+      <b-form-group id="pt-group" label="活动点数加成（%）" label-for="pt" label-cols="4" :state="pt >= 0 && pt <= 100"
+        invalid-feedback="活动点数加成数值必须 >= 0 且 <= 100">
+        <b-form-input type="number" number id="pt" v-model="pt" required :state="pt >= 0 && pt <= 100"
+          @input="onInput()"></b-form-input>
       </b-form-group>
 
       <h5 class="section" @click="isCollapsed = !isCollapsed">加成详情
