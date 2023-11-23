@@ -58,10 +58,10 @@ export async function baneverland(mushroom, bamboos, ginseng, pt, setting) {
         "constraint4": { "max": - setting.ginseng }
     },
     "variables": {
-        "Q9": { "cost": 1, "constraint1": -5*pt, "constraint2": -30*mushroom },
-        "Q10": { "cost": 1, "constraint1": -5*pt, "constraint3": -24*bamboos },
-        "Q11": { "cost": 1, "constraint1": -5*pt, "constraint4": -20*ginseng },
-        "Q12": { "cost": 1, "constraint1": -20*pt, "constraint2": -4*mushroom, "constraint3": -4*bamboos, "constraint4": -4*ginseng }
+      "Q9": { "cost": 1, "constraint1": -Math.ceil(5*pt), "constraint2": -Math.ceil(30*mushroom) },
+      "Q10": { "cost": 1, "constraint1": -Math.ceil(5*pt), "constraint3": -Math.ceil(24*bamboos) },
+      "Q11": { "cost": 1, "constraint1": -Math.ceil(5*pt), "constraint4": -Math.ceil(20*ginseng) },
+      "Q12": { "cost": 1, "constraint1": -Math.ceil(20*pt), "constraint2": -Math.ceil(4*mushroom), "constraint3": -Math.ceil(4*bamboos), "constraint4": -Math.ceil(4*ginseng) }
     },
     "ints": {
         "Q9": 1,

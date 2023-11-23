@@ -7,6 +7,7 @@
       <b-row align-v="start">
         <b-col lg="4" offset-lg="2" md="8" offset-md="2" @change="onChange()">
           <base-input ref="baseInput" />
+          <fast-edit @submit="fastEdit" />
         </b-col>
         <b-col lg="4" offset-lg="0" md="8" offset-md="2">
           <result-card message="计算结果" :result="result" />
@@ -21,6 +22,7 @@
 import BaseInput from "../components/BaseInput.vue";
 import ResultCard from "../components/ResultCard.vue";
 import Setting from "../components/Setting.vue";
+import FastEdit from "../components/FastEdit.vue";
 import { baneverland } from "../js/calc";
 
 export default {
@@ -33,6 +35,7 @@ export default {
     BaseInput,
     ResultCard,
     Setting,
+    FastEdit,
   },
   methods: {
     onChange: async function () {
@@ -46,6 +49,23 @@ export default {
         setting
       );
       this.result = result;
+    },
+    fastEdit: function (data) {
+      const d = this.$refs.baseInput;
+      const setting = this.$refs.setting;
+      console.log(data, d, setting);
+      // 余数进一
+      const mushroomCost = Math.ceil((d.mushroom / 100 + 1) * data.q9num * 30) + Math.ceil((d.mushroom / 100 + 1) * data.q12num * 4);
+      const bamboosCost = Math.ceil((d.bamboos / 100 + 1) * data.q10num * 24) + Math.ceil((d.bamboos / 100 + 1) * data.q12num * 4);
+      const ginsengCost = Math.ceil((d.ginseng / 100 + 1) * data.q11num * 20) + Math.ceil((d.ginseng / 100 + 1) * data.q12num * 4);
+      const ptCost = Math.ceil((d.pt / 100 + 1) * data.q9num * 5) + Math.ceil((d.pt / 100 + 1) * data.q10num * 5) + Math.ceil((d.pt / 100 + 1) * data.q11num * 5) + Math.ceil((d.pt / 100 + 1) * data.q12num * 20);
+
+      setting.mushroom -= mushroomCost;
+      setting.bamboos -= bamboosCost;
+      setting.ginseng -= ginsengCost;
+      setting.pt -= ptCost;
+
+      this.onChange();
     }
   },
   async mounted() {
