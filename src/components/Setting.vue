@@ -5,7 +5,7 @@
         style="transition: all 0.5s ease-in-out;" class="bi bi-chevron-down" viewBox="0 0 16 16"
         :style="isCollapsed ? 'transform: rotate(180deg)' : ''">
         <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 1 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5
-                                      0 0 1 0-.708z" />
+                                        0 0 1 0-.708z" />
       </svg>
     </h5>
     <div style="overflow: hidden;transition: max-height 0.5s ease-in-out;"
@@ -50,7 +50,7 @@
 export default {
   data() {
     return {
-      isCollapsed: true,
+      isCollapsed: false,
       mushroom: 7609,
       bamboos: 6561,
       ginseng: 4955,
